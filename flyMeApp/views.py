@@ -20,7 +20,8 @@ class BookingCreateAPIView(CreateAPIView):
 	permission_classes = [IsAuthenticated]
 
 	def perform_create(self, serializer):
-		serializer.save(passenger=self.request.user, booking_ref="REF# "+str(uuid.uuid4())[:4])
+		serializer.save(passenger=self.request.user, booking_ref=str(uuid.uuid4())[:4].upper())
+	
 
 class TicketCreateAPIView(CreateAPIView):
 	serializer_class = TicketCreateSerializer

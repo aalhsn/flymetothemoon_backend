@@ -1,16 +1,27 @@
 from rest_framework import serializers
 from .models import User, Booking, Ticket
 
+class UserSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = User
+		fields = ['username', 'first_name', 'last_name']
+
+
+
 class TicketCreateSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Ticket
-		fields = '__all__'
 		exclude = ["flight_number", "owner"]
 
 class TicketSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Ticket
 		fields = '__all__'
+
+class TicketBookingSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Ticket
+		fields = ["flight_number"]
 		
 
 class UserCreateSerializer(serializers.ModelSerializer):
@@ -30,21 +41,21 @@ class UserCreateSerializer(serializers.ModelSerializer):
 		print("User saved")
 		return validated_data
 
-class UserSerializer(serializers.ModelSerializer):
-	class Meta:
-		model = Ticket
-		fields = ['username', 'first_name', 'last_name']
+
 
 
 class BookingListSerializer(serializers.ModelSerializer):
-	Tickets = TicketSerializer(many=True)
-
+	passenger = UserSerializer()
+	ticket = TicketSerializer()
 	class Meta:
 		model = Booking
-		fields = ['Tickets', 'passenger']
+		fields = '__all__'
 
 
 class BookingCreateSerializer(serializers.ModelSerializer):
+	ticket = TicketBookingSerializer()
+
 	class Meta:
 		model = Booking
-		fields = ["ticket"]
+		fields = ['ticket']
+
